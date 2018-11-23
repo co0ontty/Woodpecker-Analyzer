@@ -3,6 +3,7 @@
 git clone git@github.com:co0ontty/Woodpecker-Analyzer.git  
 将文件夹中的文件全部复制到php根目录中  
 访问index.html就可以使用  
+默认日志文件为data.txt  
 #### 环境需要
 Mysql  
 本系统默认使用的数据库密码是123456  
