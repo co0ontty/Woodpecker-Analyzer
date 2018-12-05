@@ -13,3 +13,8 @@ CREATE database rizhi;
 use rizhi;  
 CREATE TABLE TCP (num int,ip VARCHAR(30));  
 
+#### auto_tongji
+使用在日志需要备份在备份机的情况  
+备份机与靶机都需要安装web服务  
+在auto_tongji的文件中修改文件自动下载的ip地址为靶机  
+啄木鸟日志分析系统安装在备份机中  
