@@ -92,7 +92,7 @@ for ($i=0; $i < $line_num; $i++) {
 			$row = mysqli_fetch_assoc($result);
 			$ip_num = $row["num"];
 			if ($ip_num == NULL) {
-				$into_sql = "INSERT INTO TCP (num,ip)VALUES ('1','Siemens TIA Portal V15')";
+				$into_sql = "INSERT INTO TCP (num,ip)VALUES ('1','Siemens TIA Portal V15 Opend')";
 			if (mysqli_query($conn, $into_sql)) {
 		    	echo "Siemens TIA Portal V15 被打开"."<br/>";
 			} else {
@@ -100,7 +100,7 @@ for ($i=0; $i < $line_num; $i++) {
 			}
 		} else {
 			$ip_num = $ip_num +1;
-			$into_sql = "UPDATE TCP SET num='$ip_num' WHERE ip='Siemens TIA Portal V15'";
+			$into_sql = "UPDATE TCP SET num='$ip_num' WHERE ip='Siemens TIA Portal V15 Opend'";
 			if (mysqli_query($conn, $into_sql)) {
 			} else {
 			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
