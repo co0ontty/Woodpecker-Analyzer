@@ -3,6 +3,7 @@
 <html>
 <head>
 	<title>啄木鸟日志分析系统</title>
+    <link rel="shortcut icon" href="woodpecker.ico" / >
 </head>
 <body style="text-align: center;">
 <div>
@@ -19,8 +20,7 @@ if (!$conn) {
     die("连接失败: " . mysqli_connect_error());
 }
 //打开需要导入的日志文件
-$myfile = fopen("data.txt", "r") or die("请导入新日志
-	");
+$myfile = fopen("data.txt", "r") or die("请导入新日志");
 $line_num = count(file('data.txt')); 
 //输出文件中的总行数
 echo "数据总量：".$line_num."行"."<br/>"; 
@@ -49,7 +49,7 @@ for ($i=0; $i < $line_num; $i++) {
 			//如果该ip第一次访问，在mysql里面新建记录
 			$into_sql = "INSERT INTO TCP (num,ip)VALUES ('1','$ip')";
 			if (mysqli_query($conn, $into_sql)) {
-		    echo "新记录插入成功";
+		    echo "该ip第一次访问";
 			} else {
 			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
 			}
@@ -64,16 +64,42 @@ for ($i=0; $i < $line_num; $i++) {
 			}
 			echo "该IP第".$ip_num."次访问"."<br/>";
 		}
-	} else {
+	} else if ($start_line == "U") {
+		$sql = "SELECT * FROM TCP WHERE ip='new user create'";//查询是否存在该ip的记录
+		$result = mysqli_query($conn, $sql);
+		$row = mysqli_fetch_assoc($result);
+		$ip_num = $row["num"];
+		if ($ip_num == NULL) {
+			//如果该ip第一次访问，在mysql里面新建记录
+			$into_sql = "INSERT INTO TCP (num,ip)VALUES ('1','new user create')";
+			if (mysqli_query($conn, $into_sql)) {
+		    echo "该ip第一次创建用户";
+			} else {
+			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+			}
+		} else {
+			//如果该ip之前访问过系统，则在原来基础上增加ip_num
+			$ip_num = $ip_num +1;
+			$into_sql = "UPDATE TCP SET num='$ip_num' WHERE ip='new user create'";
+			if (mysqli_query($conn, $into_sql)) {
+		    // echo "数据更新成功"."<br/>";
+			} else {
+			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+			}
+			echo "该IP第".$ip_num."次访问"."<br/>";
+		}
+		echo "新用户被创建"."<br/>";
+		}else {
 		//输出日志生成时间
-		echo $line."非法连接建立"."<br/>";
+		echo $line."用户登陆该电脑"."<br/>";
 	}
 }
 //关闭日志文件
 fclose($myfile);
 $now_time = date("ymdhi");
 $ori_name = "data.txt";
-$next_name = "/var/www/html/".$now_time.".txt";
+// $next_name = "/var/www/html/".$now_time.".txt";
+$next_name = "data".$now_time.".txt";
 echo $ori_name;
 echo $next_name;
 if (file_exists($ori_name)||!file_exists($ori_name)) {

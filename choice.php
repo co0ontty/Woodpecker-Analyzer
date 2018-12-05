@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="woodpecker.ico" / >
     <title>啄木鸟日志分析</title>
 </head>
 <script>

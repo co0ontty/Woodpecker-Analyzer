@@ -3,17 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="woodpecker.ico" / >
+	<META HTTP-EQUIV=REFRESH CONTENT='10;URL=ip_tongji2.php'>
     <title>啄木鸟日志分析</title>
 </head>
 <?php
+//save a new backup from remote
+file_put_contents("baba.txt",file_get_contents("http://192.168.1.252/data.txt"));
+//connect mysql
 $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "rizhi";
 $array_ip = array();
-// 创建连接
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 // Check connection
+if (!$conn) {
+    die("连接失败: " . mysqli_connect_error());
+}
+//open data.txt
+$myfile = fopen("baba.txt", "r") or die("请导入新日志
+	");
+$line_num = count(file('baba.txt')); 
+
+$file = file("baba.txt");
+for ($i=0; $i < $line_num; $i++) { 
+	$line = $file[$i];
+	$start_line = substr($line,0,1);
+	if ($start_line == 2) {
+		// $preg = "/20.* /is";
+		// preg_match($preg,$line,$arr);
+		// $con_date = $arr[0];
+		// echo $con_date;
+		//echo $line;
+	} else if ($start_line == " ") {
+		//echo "TCP连接：";
+		//正则匹配
+		$preg = "/3389 .* /is";
+		preg_match($preg,$line,$arr);
+		$ip = $arr[0];
+		//echo $ip."<br/>";
+		$sql = "SELECT * FROM TCP WHERE ip=".'"'.$ip.'"';//查询是否存在该ip的记录
+		$result = mysqli_query($conn, $sql);
+		$row = mysqli_fetch_assoc($result);
+		$ip_num = $row["num"];
+		if ($ip_num == NULL) {
+			//如果该ip第一次访问，在mysql里面新建记录
+			$into_sql = "INSERT INTO TCP (num,ip)VALUES ('1','$ip')";
+			if (mysqli_query($conn, $into_sql)) {
+		   //echo "新记录插入成功";
+			} else {
+			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+			}
+		} else {
+			//如果该ip之前访问过系统，则在原来基础上增加ip_num
+			$ip_num = $ip_num +1;
+			$into_sql = "UPDATE TCP SET num='$ip_num' WHERE ip='$ip'";
+			if (mysqli_query($conn, $into_sql)) {
+		    // echo "数据更新成功"."<br/>";
+			} else {
+			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+			}
+			//echo "该IP第".$ip_num."次访问"."<br/>";
+		}
+	} else {
+		//输出日志生成时间
+		//echo $line."非法连接建立"."<br/>";
+	}
+}
+//关闭日志文件
+//rename data.txt
+fclose($myfile);
+$now_time = date("ymdhi");
+$ori_name = "baba.txt";
+$next_name = "data".$now_time.".txt";
+//rename 
+if (file_exists($ori_name)||!file_exists($ori_name)) {
+	copy("baba.txt",$next_name);
+} else {
+	echo "请先导入日志";
+}
+if (file_exists($ori_name)) {
+	unlink($ori_name);
+} 
+
+//read
+
 if (!$conn) {
     die("连接失败: " . mysqli_connect_error());
 }
@@ -37,7 +111,6 @@ $sql = "SELECT num FROM TCP";
 $result = mysqli_query($conn, $sql);
 $i = 0;
 if (mysqli_num_rows($result) > 0) {
-    // 输出数据
     while($row = mysqli_fetch_assoc($result)) {
     	// echo $i;
         // echo "IP:".$row["ip"]."<br>";
@@ -49,6 +122,8 @@ if (mysqli_num_rows($result) > 0) {
     echo "0 结果";
 }
 $array_num_type = [];
+$delt = "truncate table TCP";
+mysqli_query($conn, $delt);
 mysqli_close($conn);
 for ($q=1; $q <=$i ; $q++) { 
 	$array_num_type[$q]=[$q];
