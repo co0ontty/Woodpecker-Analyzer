@@ -28,12 +28,12 @@ $file = file("data.txt");
 for ($i=0; $i < $line_num; $i++) { 
 	$line = $file[$i];
 	$start_line = substr($line,0,1);
-	if ($start_line == 2) {
+	if ($start_line == "2") {
 		// $preg = "/20.* /is";
 		// preg_match($preg,$line,$arr);
 		// $con_date = $arr[0];
 		// echo $con_date;
-		echo $line;
+		echo $line."<br/>";
 	} else if ($start_line == " ") {
 		echo "TCP连接：";
 		//正则匹配
@@ -64,34 +64,52 @@ for ($i=0; $i < $line_num; $i++) {
 			}
 			echo "该IP第".$ip_num."次访问"."<br/>";
 		}
-	} else if ($start_line == "U") {
-		$sql = "SELECT * FROM TCP WHERE ip='new user create'";//查询是否存在该ip的记录
-		$result = mysqli_query($conn, $sql);
-		$row = mysqli_fetch_assoc($result);
-		$ip_num = $row["num"];
-		if ($ip_num == NULL) {
-			//如果该ip第一次访问，在mysql里面新建记录
-			$into_sql = "INSERT INTO TCP (num,ip)VALUES ('1','new user create')";
+		} else if ($start_line == "U") {
+			$sql = "SELECT * FROM TCP WHERE ip='new user create'";//查询是否存在该ip的记录
+			$result = mysqli_query($conn, $sql);
+			$row = mysqli_fetch_assoc($result);
+			$ip_num = $row["num"];
+			if ($ip_num == NULL) {
+				$into_sql = "INSERT INTO TCP (num,ip)VALUES ('1','new user create')";
 			if (mysqli_query($conn, $into_sql)) {
-		    echo "该ip第一次创建用户";
+		    	echo "该ip第一次创建用户";
 			} else {
 			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
 			}
 		} else {
-			//如果该ip之前访问过系统，则在原来基础上增加ip_num
 			$ip_num = $ip_num +1;
 			$into_sql = "UPDATE TCP SET num='$ip_num' WHERE ip='new user create'";
 			if (mysqli_query($conn, $into_sql)) {
-		    // echo "数据更新成功"."<br/>";
 			} else {
 			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
 			}
-			echo "该IP第".$ip_num."次访问"."<br/>";
+			echo "第".$ip_num."次用户被创建"."<br/>";
 		}
-		echo "新用户被创建"."<br/>";
+		// echo "新用户被创建"."<br/>";
+		}else if ($start_line == "S") {
+			$sql = "SELECT * FROM TCP WHERE ip='Siemens TIA Portal V15'";//查询是否存在该ip的记录
+			$result = mysqli_query($conn, $sql);
+			$row = mysqli_fetch_assoc($result);
+			$ip_num = $row["num"];
+			if ($ip_num == NULL) {
+				$into_sql = "INSERT INTO TCP (num,ip)VALUES ('1','Siemens TIA Portal V15')";
+			if (mysqli_query($conn, $into_sql)) {
+		    	echo "Siemens TIA Portal V15 被打开"."<br/>";
+			} else {
+			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+			}
+		} else {
+			$ip_num = $ip_num +1;
+			$into_sql = "UPDATE TCP SET num='$ip_num' WHERE ip='Siemens TIA Portal V15'";
+			if (mysqli_query($conn, $into_sql)) {
+			} else {
+			    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+			}
+			echo "第".$ip_num."次打开Siemens TIA Portal V15"."<br/>";
+		}
+		// echo "Siemens TIA Portal V15 被打开"."<br/>";
 		}else {
-		//输出日志生成时间
-		echo $line."用户登陆该电脑"."<br/>";
+		echo $line."用户登陆"."<br/>";
 	}
 }
 //关闭日志文件
@@ -100,8 +118,8 @@ $now_time = date("ymdhi");
 $ori_name = "data.txt";
 // $next_name = "/var/www/html/".$now_time.".txt";
 $next_name = "data".$now_time.".txt";
-echo $ori_name;
-echo $next_name;
+// echo $ori_name;
+// echo $next_name;
 if (file_exists($ori_name)||!file_exists($ori_name)) {
 	copy("data.txt",$next_name);
 } else {
