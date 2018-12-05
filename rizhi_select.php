@@ -87,7 +87,7 @@ for ($i=0; $i < $line_num; $i++) {
 		}
 		// echo "新用户被创建"."<br/>";
 		}else if ($start_line == "S") {
-			$sql = "SELECT * FROM TCP WHERE ip='Siemens TIA Portal V15'";//查询是否存在该ip的记录
+			$sql = "SELECT * FROM TCP WHERE ip='Siemens TIA Portal V15 Opend'";//查询是否存在该ip的记录
 			$result = mysqli_query($conn, $sql);
 			$row = mysqli_fetch_assoc($result);
 			$ip_num = $row["num"];
@@ -109,7 +109,7 @@ for ($i=0; $i < $line_num; $i++) {
 		}
 		// echo "Siemens TIA Portal V15 被打开"."<br/>";
 		}else {
-		echo $line."用户登陆"."<br/>";
+		echo $line."可疑流量产生"."<br/>";
 	}
 }
 //关闭日志文件

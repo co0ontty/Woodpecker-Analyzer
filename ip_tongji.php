@@ -79,14 +79,14 @@ $(document).ready(function() {
     // var data = <?=$array_num_json?>;
     var data_max = 30; //Y轴最大刻度
     var line_title = ["A","B"]; //曲线名称
-    var y_label = "攻击次数"; //Y轴标题
-    var x_label = "IP(编号）"; //X轴标题
+    var y_label = "操作次数"; //Y轴标题
+    var x_label = "操作(编号）"; //X轴标题
     var x = <?=$array_num_type1?>;
     // alert("3");
     // var x = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]; //定义X轴刻度值
     var title = "IP统计"; //统计图标标题
-    j.jqplot.diagram.base("chart1", data, line_title, "源ip", x, x_label, y_label, data_max, 1);
-    j.jqplot.diagram.base("chart2", data, line_title, "攻击次数统计", x, x_label, y_label, data_max, 2);
+    j.jqplot.diagram.base("chart1", data, line_title, "操作次数排行", x, x_label, y_label, data_max, 1);
+    j.jqplot.diagram.base("chart2", data, line_title, "操作次数统计", x, x_label, y_label, data_max, 2);
 });
 </script>
 <style>
@@ -126,7 +126,7 @@ $(document).ready(function() {
 	</div>
 	<div>
 		<div style="width: 50%;text-align: center;float: left;">
-			<h3>ip编号</h3>
+			<h3>操作编号</h3>
 			<?php 
 			for ($q=1; $q <=$i ; $q++) { 
 				echo $q."<br/>";
@@ -134,7 +134,7 @@ $(document).ready(function() {
 			?>
 		</div>
 		<div style="width: 50%;text-align: center;float: right;">
-			<h3>ip</h3>
+			<h3>操作</h3>
 			<?php 
 			for ($q=0; $q <$i ; $q++) { 
 				print_r($array_ip[$q]);
