@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="woodpecker.ico" / >
-	<META HTTP-EQUIV=REFRESH CONTENT='10;URL=ip_tongji3.php'>
+	<META HTTP-EQUIV=REFRESH CONTENT='10;URL=auto_tongji.php'>
     <title>啄木鸟日志分析</title>
 </head>
 <?php
